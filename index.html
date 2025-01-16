@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>IP와 위치 저장</title>
+</head>
+<body>
+  <h1>사용자 정보 수집</h1>
+  <p>잠시만 기다려 주세요. 정보를 저장 중입니다...</p>
+  <script>
+    // 서버로 데이터를 보내는 함수
+    function sendData(ip, latitude, longitude) {
+      fetch('https://your-app.onrender.com/save', { // Render에서 제공된 서버 URL로 수정
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ip, latitude, longitude })
+      })
+      .then(res => res.json())
+      .then(data => alert('데이터 저장 성공!'))
+      .catch(err => console.error('에러 발생:', err));
+    }
+
+    // IP 가져오기
+    fetch('https://api.ipify.org?format=json')
+      .then(response => response.json())
+      .then(data => {
+        const userIp = data.ip;
+
+        // 위치 가져오기
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const latitude = position.coords.latitude;
+              const longitude = position.coords.longitude;
+              sendData(userIp, latitude, longitude); // 서버로 데이터 전송
+            },
+            (error) => {
+              console.error('위치 정보를 가져올 수 없습니다:', error);
+              sendData(userIp, null, null); // 위치 없이 IP만 전송
+            }
+          );
+        } else {
+          console.error('Geolocation을 지원하지 않습니다.');
+          sendData(userIp, null, null); // 위치 없이 IP만 전송
+        }
+      });
+  </script>
+</body>
+</html>
