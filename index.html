@@ -10,7 +10,7 @@
   <script>
     // 서버로 데이터를 보내는 함수
     function sendData(ip, latitude, longitude) {
-      fetch('https://your-app.onrender.com/save', { // Render에서 제공된 서버 URL로 수정
+      fetch('https://ip-location-tracker.onrender.com', { // Render에서 제공된 서버 URL로 수정
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ip, latitude, longitude })
